@@ -42,6 +42,18 @@ const createAndSavePerson = function (done) {
 };
 
 const createManyPeople = (arrayOfPeople, done) => {
+  var johnDoe = new Person({
+    name: "John Doe",
+    age: 100,
+    favoriteFoods: ["eggs", "fish", "fresh fruit"],
+  });
+
+  var amaDoe = new Person({
+    name: "Ama Doe",
+    age: 100,
+    favoriteFoods: ["eggs", "fish", "fresh fruit"],
+  });
+
   done(null /*, data*/);
 };
 
