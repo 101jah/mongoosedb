@@ -8,7 +8,25 @@ mongoose.connect(uri, {
   useUnifiedTopology: true,
 });
 
-let Person;
+// Define personSchema
+const personSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  age: {
+    type: Number,
+    default: 0, // Default value for age
+  },
+  favoriteFoods: {
+    type: [String],
+    default: [], // Default value for favoriteFoods as an empty array
+  },
+  // You can add more fields or validators here as needed
+});
+
+// Create the Person model based on personSchema
+let Person = mongoose.model("Person", personSchema);
 
 const createAndSavePerson = (done) => {
   done(null /*, data*/);
