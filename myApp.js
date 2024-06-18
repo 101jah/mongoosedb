@@ -42,9 +42,6 @@ const createAndSavePerson = function (done) {
 };
 
 
-const createManyPeople = (arrayOfPeople, done) => {
-  done(null /*, data*/);
-};
 
 
 
@@ -133,7 +130,6 @@ exports.findOneByFood = findOneByFood;
 exports.findPersonById = findPersonById;
 exports.findEditThenSave = findEditThenSave;
 exports.findAndUpdate = findAndUpdate;
-exports.createManyPeople = createManyPeople;
 exports.removeById = removeById;
 exports.removeManyPeople = removeManyPeople;
 exports.queryChain = queryChain;
