@@ -41,6 +41,13 @@ const createAndSavePerson = function (done) {
   });
 };
 
+
+const createManyPeople = (arrayOfPeople, done) => {
+  done(null /*, data*/);
+};
+
+
+
 // Function to create multiple people documents
 // Function to find people by name
 const findPeopleByName = function (personName, done) {
