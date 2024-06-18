@@ -14,6 +14,14 @@ mongoose.connect(uri, {
 // Database connection instance
 const db = mongoose.connection;
 
+// Create the Person model based on personSchema
+const Person = mongoose.model("Person", personSchema);
+module.exports = Person;
+// Example of importing Person model
+const Person = require("./models/person"); // Adjust the path as per your project structure
+
+// Ensure Person is imported correctly
+console.log(Person); // Verify if Person is properl
 // Event listeners for database connection
 db.on("error", (err) => {
   console.error("MongoDB connection error:", err);
@@ -21,7 +29,7 @@ db.on("error", (err) => {
 
 db.once("open", () => {
   console.log("MongoDB database connection established successfully");
-
+  const Person = mongoose.model("Person", personSchema); // Adjust the path as per your project structure
   // Define personSchema for MongoDB documents
   const personSchema = new mongoose.Schema({
     name: {
@@ -37,10 +45,6 @@ db.once("open", () => {
       default: [], // Default empty array
     },
   });
-
-  // Create the Person model based on personSchema
-  const Person = mongoose.model("Person", personSchema);
-  module.exports = Person;
 
   // Function to create and save a single person document
   const createAndSavePerson = function (done) {
