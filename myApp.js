@@ -1,6 +1,6 @@
 // Import necessary modules and configure environment variables
-require("dotenv").config();
-const mongoose = require("mongoose");
+require("dotenv").config(); // Load environment variables from .env file
+const mongoose = require("mongoose"); // Import Mongoose for MongoDB operations
 
 // MongoDB URI from environment variables
 const uri = process.env.MONGO_URI;
@@ -10,25 +10,6 @@ mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
-// Define personSchema for MongoDB documents
-const personSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  age: {
-    type: Number,
-    default: 0,
-  },
-  favoriteFoods: {
-    type: [String],
-    default: [],
-  },
-});
-
-// Create the Person model based on personSchema
-const Person = mongoose.model("Person", personSchema);
 
 // Database connection instance
 const db = mongoose.connection;
@@ -40,6 +21,25 @@ db.on("error", (err) => {
 
 db.once("open", () => {
   console.log("MongoDB database connection established successfully");
+
+  // Define personSchema for MongoDB documents
+  const personSchema = new mongoose.Schema({
+    name: {
+      type: String,
+      required: true,
+    },
+    age: {
+      type: Number,
+      default: 0,
+    },
+    favoriteFoods: {
+      type: [String], // Array of strings for favorite foods
+      default: [], // Default empty array
+    },
+  });
+
+  // Create the Person model based on personSchema
+  const Person = mongoose.model("Person", personSchema);
 
   // Function to create and save a single person document
   const createAndSavePerson = function (done) {
