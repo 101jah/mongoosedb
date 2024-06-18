@@ -93,45 +93,22 @@ db.once("open", () => {
   };
 
   // Function to find a person by ID, add "hamburger" to favoriteFoods, and save
-  const findEditThenSave = function (personId, done) {
+  const findEditThenSave = (personId, done) => {
     const foodToAdd = "hamburger";
 
-    // Step 1: Find the person by _id
-    Person.findById(personId, function (err, person) {
-      if (err) {
-        console.error("Error finding person:", err);
-        return done(err); // Pass the error to the callback
-      }
-
-      if (!person) {
-        console.log("Person not found");
-        return done(new Error("Person not found")); // Handle case where person is not found
-      }
-
-      // Step 2: Modify the favoriteFoods array
+    // .findById() method to find a person by _id with the parameter personId as search key.
+    Person.findById(personId, (err, person) => {
+      if (err) return console.log(err);
+      // Array.push() method to add "hamburger" to the list of the person's favoriteFoods
       person.favoriteFoods.push(foodToAdd);
 
-      // Step 3: Use markModified to notify Mongoose that favoriteFoods array is modified
-      person.markModified("favoriteFoods");
-
-      // Step 4: Save the updated person
-      person.save(function (err, Person) {
-        if (err) {
-          console.error("Error saving person:", err);
-          return done(err); // Pass the error to the callback
-        }
-
-        console.log("Person updated successfully:", Person);
-        done(null, Person); // Pass the updated person to the callback
+      // and inside the find callback - save() the updated Person.
+      person.save((err, updatedPerson) => {
+        if (err) return console.log(err);
+        done(null, updatedPerson);
       });
-
-      module.exports = {
-        PersonModel: Person,
-        findEditThenSave,
-      };
     });
   };
-
   // Function to find and update a person's age
   const findAndUpdate = function (personName, done) {
     const ageToSet = 20;
