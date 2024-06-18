@@ -87,6 +87,7 @@ db.once("open", () => {
     });
   };
 
+  // Function to find a person by ID, edit their favorite foods, and save
   const findEditThenSave = function (personId, done) {
     const foodToAdd = "hamburger";
 
@@ -118,34 +119,72 @@ db.once("open", () => {
     });
   };
 
-  // Function to find a person by ID, edit their favorite foods, and save
-  const findAndUpdate = (personName, done) => {
+  // Function to find and update a person's age
+  const findAndUpdate = function (personName, done) {
     const ageToSet = 20;
 
-    done(null /*, data*/);
+    Person.findOneAndUpdate(
+      { name: personName },
+      { age: ageToSet },
+      { new: true },
+      function (err, updatedPerson) {
+        if (err) {
+          console.error("Error updating person:", err);
+          return done(err);
+        }
+
+        console.log("Person updated successfully:", updatedPerson);
+        done(null, updatedPerson);
+      }
+    );
   };
 
-  const removeById = (personId, done) => {
-    done(null /*, data*/);
+  // Function to remove a person by ID
+  const removeById = function (personId, done) {
+    Person.findByIdAndRemove(personId, function (err, removedPerson) {
+      if (err) {
+        console.error("Error removing person:", err);
+        return done(err);
+      }
+
+      console.log("Person removed successfully:", removedPerson);
+      done(null, removedPerson);
+    });
   };
 
-  const removeManyPeople = (done) => {
+  // Function to remove people by name
+  const removeManyPeople = function (done) {
     const nameToRemove = "Mary";
 
-    done(null /*, data*/);
+    Person.deleteMany({ name: nameToRemove }, function (err, result) {
+      if (err) {
+        console.error("Error removing people:", err);
+        return done(err);
+      }
+
+      console.log("People removed successfully:", result);
+      done(null, result);
+    });
   };
 
-  const queryChain = (done) => {
+  // Function for querying using chaining
+  const queryChain = function (done) {
     const foodToSearch = "burrito";
 
-    done(null /*, data*/);
+    Person.find({ favoriteFoods: foodToSearch })
+      .sort("name")
+      .limit(2)
+      .select("-age")
+      .exec(function (err, data) {
+        if (err) {
+          console.error("Error querying:", err);
+          return done(err);
+        }
+
+        console.log("Query result:", data);
+        done(null, data);
+      });
   };
-
-  /** **Well Done !!**
-/* You completed these challenges, let's go celebrate !
- */
-
-  //----- **DO NOT EDIT BELOW THIS LINE** ----------------------------------
 
   // Export functions and Person model
   exports.PersonModel = Person;
@@ -154,8 +193,10 @@ db.once("open", () => {
   exports.findOneByFood = findOneByFood;
   exports.findPersonById = findPersonById;
   exports.findEditThenSave = findEditThenSave;
+  exports.findAndUpdate = findAndUpdate;
   exports.createManyPeople = createManyPeople;
   exports.removeById = removeById;
   exports.removeManyPeople = removeManyPeople;
   exports.queryChain = queryChain;
 });
+
