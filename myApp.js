@@ -51,7 +51,7 @@ db.once("open", () => {
 
     // Save the new person document to the database
     johnDoe.save(function (err, data) {
-      if (err) return console.error(err);
+      if (err) return done(err);
       done(null, data); // Invoke callback with saved person data
     });
   };
@@ -60,7 +60,7 @@ db.once("open", () => {
   const createManyPeople = function (arrayOfPeople, done) {
     // Use Mongoose's create method to insert multiple documents
     Person.create(arrayOfPeople, function (err, data) {
-      if (err) return console.error(err);
+      if (err) return done(err);
       done(null, data); // Invoke callback with created people data
     });
   };
@@ -69,7 +69,7 @@ db.once("open", () => {
   const findPeopleByName = function (personName, done) {
     // Use the find method to query people by name
     Person.find({ name: personName }, function (err, peopleFound) {
-      if (err) return console.error(err);
+      if (err) return done(err);
       done(null, peopleFound); // Invoke callback with found people
     });
   };
@@ -78,7 +78,7 @@ db.once("open", () => {
   const findOneByFood = function (food, done) {
     // Use findOne method to find a person by their favorite food
     Person.findOne({ favoriteFoods: food }, function (err, personFound) {
-      if (err) return console.error(err);
+      if (err) return done(err);
       done(null, personFound); // Invoke callback with found person
     });
   };
@@ -87,7 +87,7 @@ db.once("open", () => {
   const findPersonById = function (personId, done) {
     // Use findById method to find a person by their MongoDB _id
     Person.findById(personId, function (err, personFound) {
-      if (err) return console.error(err);
+      if (err) return done(err);
       done(null, personFound); // Invoke callback with found person
     });
   };
@@ -98,19 +98,23 @@ db.once("open", () => {
 
     // .findById() method to find a person by _id with the parameter personId as search key.
     Person.findById(personId, (err, person) => {
-      if (err) return console.log(err);
+      if (err) return done(err);
+      if (!person) return done(new Error("Person not found"));
+
       // Array.push() method to add "hamburger" to the list of the person's favoriteFoods
       person.favoriteFoods.push(foodToAdd);
 
-      person.markModified(true);
+      // Mark the favoriteFoods array as modified
+      person.markModified("favoriteFoods");
 
       // and inside the find callback - save() the updated Person.
       person.save((err, updatedPerson) => {
-        if (err) return console.log(err);
+        if (err) return done(err);
         done(null, updatedPerson);
       });
     });
   };
+
   // Function to find and update a person's age
   const findAndUpdate = function (personName, done) {
     const ageToSet = 20;
