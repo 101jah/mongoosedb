@@ -213,4 +213,3 @@ db.once("open", () => {
     queryChain,
   };
 });
-
