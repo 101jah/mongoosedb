@@ -75,11 +75,25 @@ const findPersonById = function (personId, done) {
   });
 };
 
-const findEditThenSave = (personId, done) => {
+const findEditThenSave = function (personId, done) {
   const foodToAdd = "hamburger";
 
-  done(null /*, data*/);
-};
+  // .findById() method to find a person by _id with the parameter personId as search key. 
+  Person.findById(personId, function (err, data) {
+    if (err) return console.log(err);
+
+    // Array.push() method to add "hamburger" to the list of the person's favoriteFoods
+    Person.favoriteFoods.push(foodToAdd);
+
+        // and inside the find callback - save() the updated Person.
+    Person.save((err, updatedPerson) => {
+      if(err) return console.log(err);
+      done(null, updatedPerson)
+    done(null, data);
+  });
+
+
+});
 
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
