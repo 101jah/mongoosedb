@@ -78,59 +78,58 @@ const findPersonById = function (personId, done) {
 const findEditThenSave = function (personId, done) {
   const foodToAdd = "hamburger";
 
-  // .findById() method to find a person by _id with the parameter personId as search key. 
+  // .findById() method to find a person by _id with the parameter personId as search key.
   Person.findById(personId, function (err, data) {
     if (err) return console.log(err);
 
     // Array.push() method to add "hamburger" to the list of the person's favoriteFoods
     Person.favoriteFoods.push(foodToAdd);
 
-        // and inside the find callback - save() the updated Person.
+    // and inside the find callback - save() the updated Person.
     Person.save((err, updatedPerson) => {
-      if(err) return console.log(err);
-      done(null, updatedPerson)
-    done(null, data);
+      if (err) return console.log(err);
+      done(null, updatedPerson);
+      done(null, data);
+    });
   });
 
+  const findAndUpdate = (personName, done) => {
+    const ageToSet = 20;
 
-});
+    done(null /*, data*/);
+  };
 
-const findAndUpdate = (personName, done) => {
-  const ageToSet = 20;
+  const removeById = (personId, done) => {
+    done(null /*, data*/);
+  };
 
-  done(null /*, data*/);
-};
+  const removeManyPeople = (done) => {
+    const nameToRemove = "Mary";
 
-const removeById = (personId, done) => {
-  done(null /*, data*/);
-};
+    done(null /*, data*/);
+  };
 
-const removeManyPeople = (done) => {
-  const nameToRemove = "Mary";
+  const queryChain = (done) => {
+    const foodToSearch = "burrito";
 
-  done(null /*, data*/);
-};
+    done(null /*, data*/);
+  };
 
-const queryChain = (done) => {
-  const foodToSearch = "burrito";
-
-  done(null /*, data*/);
-};
-
-/** **Well Done !!**
+  /** **Well Done !!**
 /* You completed these challenges, let's go celebrate !
  */
 
-//----- **DO NOT EDIT BELOW THIS LINE** ----------------------------------
+  //----- **DO NOT EDIT BELOW THIS LINE** ----------------------------------
 
-exports.PersonModel = Person;
-exports.createAndSavePerson = createAndSavePerson;
-exports.findPeopleByName = findPeopleByName;
-exports.findOneByFood = findOneByFood;
-exports.findPersonById = findPersonById;
-exports.findEditThenSave = findEditThenSave;
-exports.findAndUpdate = findAndUpdate;
-exports.createManyPeople = createManyPeople;
-exports.removeById = removeById;
-exports.removeManyPeople = removeManyPeople;
-exports.queryChain = queryChain;
+  exports.PersonModel = Person;
+  exports.createAndSavePerson = createAndSavePerson;
+  exports.findPeopleByName = findPeopleByName;
+  exports.findOneByFood = findOneByFood;
+  exports.findPersonById = findPersonById;
+  exports.findEditThenSave = findEditThenSave;
+  exports.findAndUpdate = findAndUpdate;
+  exports.createManyPeople = createManyPeople;
+  exports.removeById = removeById;
+  exports.removeManyPeople = removeManyPeople;
+  exports.queryChain = queryChain;
+};
