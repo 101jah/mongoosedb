@@ -87,21 +87,38 @@ db.once("open", () => {
     });
   };
 
-  // Function to find a person by ID, edit their favorite foods, and save
   const findEditThenSave = function (personId, done) {
     const foodToAdd = "hamburger";
 
+    // Step 1: Find the person by _id
     Person.findById(personId, function (err, person) {
-      if (err) return console.error(err);
+      if (err) {
+        console.error("Error finding person:", err);
+        return done(err); // Pass the error to the callback
+      }
 
+      if (!person) {
+        console.log("Person not found");
+        return done(new Error("Person not found")); // Handle case where person is not found
+      }
+
+      // Step 2: Modify the favoriteFoods array
       person.favoriteFoods.push(foodToAdd);
 
+      // Step 3: Save the updated person
       person.save(function (err, updatedPerson) {
-        if (err) return console.error(err);
-        done(null, updatedPerson);
+        if (err) {
+          console.error("Error saving person:", err);
+          return done(err); // Pass the error to the callback
+        }
+
+        console.log("Person updated successfully:", updatedPerson);
+        done(null, updatedPerson); // Pass the updated person to the callback
       });
     });
   };
+
+  // Function to find a person by ID, edit their favorite foods, and save
   const findAndUpdate = (personName, done) => {
     const ageToSet = 20;
 
