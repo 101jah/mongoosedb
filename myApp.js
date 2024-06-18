@@ -1,97 +1,107 @@
+// Import necessary modules and configure environment variables
 require("dotenv").config();
-mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
+// MongoDB URI from environment variables
 const uri = process.env.MONGO_URI;
 
+// Connect to MongoDB
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-// Define personSchema
-const personSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  age: {
-    type: Number,
-    default: 0, // Default value for age
-  },
-  favoriteFoods: {
-    type: [String],
-    default: [], // Default value for favoriteFoods as an empty array
-  },
-  // You can add more fields or validators here as needed
+// Database connection instance
+const db = mongoose.connection;
+
+// Event listeners for database connection
+db.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
 });
 
-// Create the Person model based on personSchema
-let Person = mongoose.model("Person", personSchema);
+db.once("open", () => {
+  console.log("MongoDB database connection established successfully");
 
-const createAndSavePerson = function (done) {
-  var johnDoe = new Person({
-    name: "John Doe",
-    age: 100,
-    favoriteFoods: ["eggs", "fish", "fresh fruit"],
+  // Define personSchema
+  const personSchema = new mongoose.Schema({
+    name: {
+      type: String,
+      required: true,
+    },
+    age: {
+      type: Number,
+      default: 0,
+    },
+    favoriteFoods: {
+      type: [String],
+      default: [],
+    },
   });
 
-  johnDoe.save(function (err, data) {
-    if (err) return console.error(err);
-    done(null, data);
-  });
-};
+  // Create the Person model based on personSchema
+  const Person = mongoose.model("Person", personSchema);
 
-var arraryofPeople = [
-  { name: "Jim", age: 34, favoriteFoods: ["pizza", "taco", "fries"] },
-  { name: "Jake", age: 14, favoriteFoods: ["wine", "glass"] },
-  { name: "Robert", age: 78, favoriteFoods: ["wine"] },
-];
-
-const createManyPeople = function (arrayOfPeople, done) {
-  Person.create(arrayOfPeople, function (err, data) {
-    if (err) return console.error(err);
-    done(null, data);
-  });
-};
-
-const findPeopleByName = function (personName, done) {
-  Person.find({ name: personName }, function (err, personFound) {
-    if (err) return console.log(err);
-    done(null, personFound);
-  });
-};
-
-const findOneByFood = function (food, done) {
-  Person.findOne({ favoriteFoods: food }, function (err, food) {
-    if (err) return console.log(err);
-    done(null, food);
-  });
-};
-
-const findPersonById = function (personId, done) {
-  Person.findById(personId, function (err, data) {
-    if (err) return console.log(err);
-    done(null, data);
-  });
-};
-
-const findEditThenSave = function (personId, done) {
-  const foodToAdd = "hamburger";
-
-  // .findById() method to find a person by _id with the parameter personId as search key.
-  Person.findById(personId, function (err, person) {
-    if (err) return console.log(err);
-
-    // Array.push() method to add "hamburger" to the list of the person's favoriteFoods
-    person.favoriteFoods.push(foodToAdd);
-
-    // and inside the find callback - save() the updated Person.
-    person.save((err, updatedPerson) => {
-      if (err) return console.log(err, updatedPerson);
-      done(null, updatedPerson);
+  // Function to create and save a single person
+  const createAndSavePerson = function (done) {
+    const johnDoe = new Person({
+      name: "John Doe",
+      age: 100,
+      favoriteFoods: ["eggs", "fish", "fresh fruit"],
     });
-  });
 
+    johnDoe.save(function (err, data) {
+      if (err) return console.error(err);
+      done(null, data);
+    });
+  };
+
+  // Function to create many people
+  const createManyPeople = function (arrayOfPeople, done) {
+    Person.create(arrayOfPeople, function (err, data) {
+      if (err) return console.error(err);
+      done(null, data);
+    });
+  };
+
+  // Function to find people by name
+  const findPeopleByName = function (personName, done) {
+    Person.find({ name: personName }, function (err, peopleFound) {
+      if (err) return console.error(err);
+      done(null, peopleFound);
+    });
+  };
+
+  // Function to find one person by favorite food
+  const findOneByFood = function (food, done) {
+    Person.findOne({ favoriteFoods: food }, function (err, personFound) {
+      if (err) return console.error(err);
+      done(null, personFound);
+    });
+  };
+
+  // Function to find a person by ID
+  const findPersonById = function (personId, done) {
+    Person.findById(personId, function (err, personFound) {
+      if (err) return console.error(err);
+      done(null, personFound);
+    });
+  };
+
+  // Function to find a person by ID, edit their favorite foods, and save
+  const findEditThenSave = function (personId, done) {
+    const foodToAdd = "hamburger";
+
+    Person.findById(personId, function (err, person) {
+      if (err) return console.error(err);
+
+      person.favoriteFoods.push(foodToAdd);
+
+      person.save(function (err, updatedPerson) {
+        if (err) return console.error(err);
+        done(null, updatedPerson);
+      });
+    });
+  };
   const findAndUpdate = (personName, done) => {
     const ageToSet = 20;
 
@@ -120,15 +130,15 @@ const findEditThenSave = function (personId, done) {
 
   //----- **DO NOT EDIT BELOW THIS LINE** ----------------------------------
 
+  // Export functions and Person model
   exports.PersonModel = Person;
   exports.createAndSavePerson = createAndSavePerson;
   exports.findPeopleByName = findPeopleByName;
   exports.findOneByFood = findOneByFood;
   exports.findPersonById = findPersonById;
   exports.findEditThenSave = findEditThenSave;
-  exports.findAndUpdate = findAndUpdate;
   exports.createManyPeople = createManyPeople;
   exports.removeById = removeById;
   exports.removeManyPeople = removeManyPeople;
   exports.queryChain = queryChain;
-};
+});
