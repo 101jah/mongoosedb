@@ -106,6 +106,8 @@ db.once("open", () => {
       // Step 2: Modify the favoriteFoods array
       person.favoriteFoods.push(foodToAdd);
 
+      person.markModified("favoriteFoods");
+
       // Step 3: Save the updated person
       person.save(function (err, updatedPerson) {
         if (err) {
@@ -135,7 +137,7 @@ db.once("open", () => {
 
         console.log("Person updated successfully:", updatedPerson);
         done(null, updatedPerson);
-      }
+      },
     );
   };
 
@@ -199,4 +201,3 @@ db.once("open", () => {
   exports.removeManyPeople = removeManyPeople;
   exports.queryChain = queryChain;
 });
-
