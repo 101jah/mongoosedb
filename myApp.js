@@ -112,7 +112,7 @@ db.once("open", () => {
       person.favoriteFoods.push(foodToAdd);
 
       // Step 3: Use markModified to notify Mongoose that favoriteFoods array is modified
-      person.markModified("favoriteFoods");
+      person.markModified("hamburger");
 
       // Step 4: Save the updated person
       person.save(function (err, updatedPerson) {
