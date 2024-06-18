@@ -102,6 +102,8 @@ db.once("open", () => {
       // Array.push() method to add "hamburger" to the list of the person's favoriteFoods
       person.favoriteFoods.push(foodToAdd);
 
+      person.markModified(true);
+
       // and inside the find callback - save() the updated Person.
       person.save((err, updatedPerson) => {
         if (err) return console.log(err);
