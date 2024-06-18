@@ -106,9 +106,10 @@ db.once("open", () => {
       // Step 2: Modify the favoriteFoods array
       person.favoriteFoods.push(foodToAdd);
 
+      // Step 3: Use markModified to notify Mongoose that favoriteFoods array is modified
       person.markModified("favoriteFoods");
 
-      // Step 3: Save the updated person
+      // Step 4: Save the updated person
       person.save(function (err, updatedPerson) {
         if (err) {
           console.error("Error saving person:", err);
@@ -187,6 +188,12 @@ db.once("open", () => {
         done(null, data);
       });
   };
+
+  /** **Well Done !!**
+/* You completed these challenges, let's go celebrate !
+ */
+
+  //----- **DO NOT EDIT BELOW THIS LINE** ----------------------------------
 
   // Export functions and Person model
   exports.PersonModel = Person;
