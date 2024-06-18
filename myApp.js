@@ -40,6 +40,7 @@ db.once("open", () => {
 
   // Create the Person model based on personSchema
   const Person = mongoose.model("Person", personSchema);
+  module.exports = Person;
 
   // Function to create and save a single person document
   const createAndSavePerson = function (done) {
