@@ -92,25 +92,36 @@ db.once("open", () => {
     });
   };
 
-  // Function to find a person by ID, add "hamburger" to favoriteFoods, and save
-  const findEditThenSave = (personId, done) => {
+  const findEditThenSave = function (personId, done) {
     const foodToAdd = "hamburger";
 
-    // .findById() method to find a person by _id with the parameter personId as search key.
-    Person.findById(personId, (err, person) => {
-      if (err) return done(err);
-      if (!person) return done(new Error("Person not found"));
+    // Step 1: Find the person by _id
+    Person.findById(personId, function (err, person) {
+      if (err) {
+        console.error("Error finding person:", err);
+        return done(err); // Pass the error to the callback
+      }
 
-      // Array.push() method to add "hamburger" to the list of the person's favoriteFoods
+      if (!person) {
+        console.log("Person not found");
+        return done(new Error("Person not found")); // Handle case where person is not found
+      }
+
+      // Step 2: Modify the favoriteFoods array
       person.favoriteFoods.push(foodToAdd);
 
-      // Mark the favoriteFoods array as modified
+      // Step 3: Use markModified to notify Mongoose that favoriteFoods array is modified
       person.markModified("favoriteFoods");
 
-      // and inside the find callback - save() the updated Person.
-      person.save((err, updatedPerson) => {
-        if (err) return done(err);
-        done(null, updatedPerson);
+      // Step 4: Save the updated person inside the find callback
+      person.save(function (err, updatedPerson) {
+        if (err) {
+          console.error("Error saving person:", err);
+          return done(err); // Pass the error to the callback
+        }
+
+        console.log("Person updated successfully:", updatedPerson);
+        done(null, updatedPerson); // Pass the updated person to the callback
       });
     });
   };
